@@ -1,6 +1,7 @@
 on:
   workflow_dispatch:
-
+  schedule:
+    - cron: '0 16 * * *'
 name: Build and upload gccefi2linux compiler nightly build
 
 jobs:
@@ -37,7 +38,7 @@ jobs:
           cd objdir
           $PWD/../configure --prefix=${DEPLOY_WS}/linux --enable-languages=c,c++,fortran,jit,lto --disable-multilib --enable-shared --enable-host-shared --with-system-zlib --with-demangler-in-ld -enable-clocale=gnu --with-pic --enable-cloog-backend=isl
           check_rc
-          make -j8
+          make -j$NCPU
           check_rc
           make install
           check_rc
