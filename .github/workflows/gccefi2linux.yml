@@ -29,6 +29,7 @@ jobs:
               rc=$?
               if [ $rc != 0 ]; then exit $rc; fi
           }
+          test -z $NCPU && NCPU=$(nproc)
           cd $builds_ws
           DEPLOY_WS=${builds_ws}/deploy/linux_prod
           rm -rf objdir ${DEPLOY_WS}
