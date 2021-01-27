@@ -37,7 +37,7 @@ jobs:
           git show --name-only --oneline HEAD^2 >${DEPLOY_WS}/gcc_changes 2>&1 || true
           ./contrib/download_prerequisites
           cd objdir
-          $PWD/../configure --prefix=${DEPLOY_WS}/linux --enable-languages=c,c++,fortran,jit,lto --disable-multilib --enable-shared --enable-host-shared --with-system-zlib --with-demangler-in-ld -enable-clocale=gnu --with-pic --enable-cloog-backend=isl
+          $PWD/../configure --prefix=${DEPLOY_WS}/linux --enable-languages=c,c++,fortran,jit,lto --disable-multilib --enable-shared --enable-host-shared --with-system-zlib --with-demangler-in-ld -enable-clocale=gnu --with-pic --enable-cloog-backend=isl --with-fmath=sse --with-cpu=corei7 --with-arch=corei7
           check_rc
           make -j$NCPU
           check_rc
