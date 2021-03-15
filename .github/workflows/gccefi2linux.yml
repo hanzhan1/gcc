@@ -23,7 +23,11 @@ jobs:
           apt-get autoclean
       - name: Checkout code
         uses: actions/checkout@v1
+        with:
+          persist-credentials: false
       - name: Build gccefi2linux compiler on ubuntu18
+        env:
+          SYNC_TOKEN: ${{ secrets.TEST_SYNC_COMMIT_DATE }}
         run: |
           builds_ws=`pwd`
           check_rc () {
@@ -34,7 +38,8 @@ jobs:
           cd $builds_ws
           today=$(date -u +%Y-%m-%d);
           GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend
-          git push -f origin
+          git remote -v
+          git push https://$SYNC_TOKEN@github.com/${{ github.repository }} hanzhan1-modify-commit-date
           DEPLOY_WS=${builds_ws}/deploy/linux_prod
           rm -rf objdir ${DEPLOY_WS}
           mkdir -p objdir ${DEPLOY_WS}/linux
