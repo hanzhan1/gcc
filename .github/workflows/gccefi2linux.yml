@@ -33,6 +33,8 @@ jobs:
         env:
           SYNC_TOKEN: ${{ secrets.TEST_SYNC_COMMIT_DATE }}
         run: |
+          git config --global user.name 'hanzhan1'
+          git config --global user.email 'hanzhan1@users.noreply.github.com'
           builds_ws=$GITHUB_WORKSPACE
           check_rc () {
               rc=$?
@@ -40,6 +42,7 @@ jobs:
           }
           test -z $NCPU && NCPU=$(nproc)
           cd $builds_ws
+          git remote add origin "https://$SYNC_TOKEN@github.com/$GITHUB_REPOSITORY.git"
           today=$(date -u +%Y-%m-%d);
           GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend
           git remote -v
