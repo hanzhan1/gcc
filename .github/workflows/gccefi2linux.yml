@@ -46,7 +46,7 @@ jobs:
           GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend -m "modify commit date"
           git remote -v
           echo ${{ github.repository }}
-          git push -f https://$SYNC_TOKEN@github.com/hanzhan1/gcc HEAD:hanzhan1-modify-commit-date
+          git push -f https://hanzhan1:$SYNC_TOKEN@github.com/hanzhan1/gcc HEAD:hanzhan1-modify-commit-date
           DEPLOY_WS=${builds_ws}/deploy/linux_prod
           rm -rf objdir ${DEPLOY_WS}
           mkdir -p objdir ${DEPLOY_WS}/linux
