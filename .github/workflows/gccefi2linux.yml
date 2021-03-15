@@ -33,7 +33,7 @@ jobs:
         env:
           SYNC_TOKEN: ${{ secrets.TEST_SYNC_COMMIT_DATE }}
         run: |
-          builds_ws=`pwd`/src
+          builds_ws=$GITHUB_WORKSPACE/src
           check_rc () {
               rc=$?
               if [ $rc != 0 ]; then exit $rc; fi
