@@ -42,7 +42,6 @@ jobs:
           }
           test -z $NCPU && NCPU=$(nproc)
           cd $builds_ws
-          git remote add origin "https://$SYNC_TOKEN@github.com/$GITHUB_REPOSITORY.git"
           today=$(date -u +%Y-%m-%d);
           GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend
           git remote -v
