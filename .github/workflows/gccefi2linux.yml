@@ -18,6 +18,7 @@ jobs:
           # is used.
           persist-credentials: false
           fetch-depth: 0
+          path: src
       - name: Prepare tools
         run: |
           apt-get update
@@ -32,7 +33,7 @@ jobs:
         env:
           SYNC_TOKEN: ${{ secrets.TEST_SYNC_COMMIT_DATE }}
         run: |
-          builds_ws=`pwd`
+          builds_ws=`pwd`/src
           check_rc () {
               rc=$?
               if [ $rc != 0 ]; then exit $rc; fi
