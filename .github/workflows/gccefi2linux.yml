@@ -32,7 +32,7 @@ jobs:
           }
           test -z $NCPU && NCPU=$(nproc)
           cd $builds_ws
-          today=$(date -u -d +%Y-%m-%d);
+          today=$(date -u +%Y-%m-%d);
           GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend
           git push -f origin
           DEPLOY_WS=${builds_ws}/deploy/linux_prod
