@@ -1,0 +1,52 @@
+on:
+  workflow_dispatch:
+
+name: test build
+
+jobs:
+  build_gccefi2linux:
+    name: Build gccefi2linux compiler
+    runs-on: ubuntu-latest
+    container: ubuntu:18.04
+    steps:
+      - uses: actions/checkout@v2
+        persist-credentials: false
+        path: src
+      - name: Prepare tools
+        run: |
+          apt-get update
+          apt-get -yq install build-essential\
+                        wget\
+                        git\
+                        texinfo\
+                        libz-dev\
+                        flex
+          apt-get autoclean
+      - name: Build gccefi2linux compiler on ubuntu18
+        env:
+          SYNC_TOKEN: ${{ secrets.TEST_SYNC_COMMIT_DATE }}
+        run: |
+          export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+          git config --global user.name 'hanzhan1'
+          git config --global user.email 'hanzhan1@users.noreply.github.com'
+          builds_ws=$GITHUB_WORKSPACE/src
+          check_rc () {
+              rc=$?
+              if [ $rc != 0 ]; then exit $rc; fi
+          }
+          test -z $NCPU && NCPU=$(nproc)
+          cd $builds_ws
+          ls
+          today=$(date -u +%Y-%m-%d);
+          GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend -m "modify commit date"
+          git remote -v
+          echo ${{ github.repository }}
+          git push -f https://hanzhan1:$SYNC_TOKEN@github.com/${{ github.repository }} HEAD:hanzhan1-modify-commit-date
+          DEPLOY_WS=${builds_ws}/deploy/linux_prod
+          rm -rf objdir ${DEPLOY_WS}
+          mkdir -p objdir ${DEPLOY_WS}/linux
+          git show --name-only --oneline HEAD^2 >${DEPLOY_WS}/gcc_changes 2>&1 || true
+          ./contrib/download_prerequisites
+          cd objdir
+          $PWD/../configure --prefix=${DEPLOY_WS}/linux --enable-languages=c,c++,fortran,jit,lto --disable-multilib --enable-shared --enable-host-shared --with-system-zlib --with-demangler-in-ld -enable-clocale=gnu --with-pic --enable-cloog-backend=isl --with-fmath=sse --with-cpu=corei7 --with-arch=corei7
+          check_rc
