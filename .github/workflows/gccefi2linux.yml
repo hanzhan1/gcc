@@ -11,14 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu:18.04
     steps:
-      - uses: actions/checkout@v2
-        with:
-          # persist-credentials: false allows us to use our own credentials for
-          # pushing to the repository.  Otherwise, the default github actions token
-          # is used.
-          persist-credentials: false
-          fetch-depth: 0
-          path: src
+      - uses: actions/checkout@v1
       - name: Prepare tools
         run: |
           apt-get update
@@ -35,7 +28,7 @@ jobs:
         run: |
           git config --global user.name 'hanzhan1'
           git config --global user.email 'hanzhan1@users.noreply.github.com'
-          builds_ws=$GITHUB_WORKSPACE/src
+          builds_ws=$GITHUB_WORKSPACE
           check_rc () {
               rc=$?
               if [ $rc != 0 ]; then exit $rc; fi
@@ -43,11 +36,12 @@ jobs:
           test -z $NCPU && NCPU=$(nproc)
           cd $builds_ws
           ls
+          git add remote origin 
           today=$(date -u +%Y-%m-%d);
           GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend -m "modify commit date"
           git remote -v
           echo ${{ github.repository }}
-          git push -f https://$SYNC_TOKEN@github.com/hanzhan1/gcc HEAD:hanzhan1-modify-commit-date
+          git push -f https://$SYNC_TOKEN@github.com/${{ github.repository }} HEAD:hanzhan1-modify-commit-date
           DEPLOY_WS=${builds_ws}/deploy/linux_prod
           rm -rf objdir ${DEPLOY_WS}
           mkdir -p objdir ${DEPLOY_WS}/linux
