@@ -37,7 +37,7 @@ jobs:
           cd $builds_ws
           ls
           today=$(date -u +%Y-%m-%d);
-          GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend --date "$(date -u -R -d "$today 00:00:00")" -m "test modify commit date"
+          GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend --date "$(date -u -R -d "$today 00:00:00")" -m "merge and modify commit date for nightly"
           git remote -v
           echo ${{ github.repository }}
           git push -f https://hanzhan1:$SYNC_TOKEN@github.com/${{ github.repository }} HEAD:hanzhan1-modify-commit-date
@@ -49,3 +49,16 @@ jobs:
           cd objdir
           $PWD/../configure --prefix=${DEPLOY_WS}/linux --enable-languages=c,c++,fortran,jit,lto --disable-multilib --enable-shared --enable-host-shared --with-system-zlib --with-demangler-in-ld -enable-clocale=gnu --with-pic --enable-cloog-backend=isl --with-fmath=sse --with-cpu=corei7 --with-arch=corei7
           check_rc
+          make -j$NCPU
+          check_rc
+          make install
+          check_rc
+          echo "Build finished successfully"
+          cd $DEPLOY_WS && rm -f sum.txt && find . -type f | xargs md5sum --binary > ../sum_Release.txt && mv ../sum_Release.txt ./sum.txt
+          tar cfz ../../gccefi2linux.tar.xz *
+          cd ../../
+      - name: Upload gccefi2linux build artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: gccefi2linux
+          path: gccefi2linux.tar.xz
