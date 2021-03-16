@@ -25,9 +25,10 @@ jobs:
       - name: Build gccefi2linux compiler on ubuntu18
         env:
           SYNC_TOKEN: ${{ secrets.TEST_SYNC_COMMIT_DATE }}
+          USER_NAME: 'hanzhan1'
         run: |
-          git config --global user.name 'hanzhan1'
-          git config --global user.email 'hanzhan1@users.noreply.github.com'
+          git config --global user.name $USER_NAME
+          git config --global user.email $USER_NAME'@users.noreply.github.com'
           builds_ws=$GITHUB_WORKSPACE
           check_rc () {
               rc=$?
@@ -37,10 +38,10 @@ jobs:
           cd $builds_ws
           ls
           today=$(date -u +%Y-%m-%d);
-          GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend --date "$(date -u -R -d "$today 00:00:00")" -m "merge and modify commit date for nightly"
+          GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend --no-edit
           git remote -v
           echo ${{ github.repository }}
-          git push -f https://hanzhan1:$SYNC_TOKEN@github.com/${{ github.repository }} HEAD:hanzhan1-modify-commit-date
+          git push -f https://$USER_NAME:$SYNC_TOKEN@github.com/${{ github.repository }} HEAD:hanzhan1-modify-commit-date
           DEPLOY_WS=${builds_ws}/deploy/linux_prod
           rm -rf objdir ${DEPLOY_WS}
           mkdir -p objdir ${DEPLOY_WS}/linux
