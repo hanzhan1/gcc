@@ -37,7 +37,7 @@ jobs:
           cd $builds_ws
           ls
           today=$(date -u +%Y-%m-%d);
-          GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend -m "modify commit date"
+          GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend --date "$(date -u -R -d "$today 00:00:00")" -m "test modify commit date"
           git remote -v
           echo ${{ github.repository }}
           git push -f https://hanzhan1:$SYNC_TOKEN@github.com/${{ github.repository }} HEAD:hanzhan1-modify-commit-date
