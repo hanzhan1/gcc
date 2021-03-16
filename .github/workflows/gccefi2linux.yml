@@ -36,7 +36,6 @@ jobs:
           test -z $NCPU && NCPU=$(nproc)
           cd $builds_ws
           ls
-          git add remote origin 
           today=$(date -u +%Y-%m-%d);
           GIT_COMMITTER_DATE=$(date -u -R -d "$today 00:00:00") git commit --amend -m "modify commit date"
           git remote -v
