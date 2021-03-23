@@ -24,8 +24,8 @@ jobs:
           apt-get autoclean
       - name: Build gccefi2linux compiler on ubuntu18
         env:
-          SYNC_TOKEN: ${{ secrets.TEST_SYNC_COMMIT_DATE }}
-          USER_NAME: 'hanzhan1'
+          SYNC_TOKEN: ${{ secrets.SYNC_COMMIT_DATE_NSTESTER_TOKEN }}
+          USER_NAME: 'nstester'
         run: |
           git config --global user.name $USER_NAME
           git config --global user.email $USER_NAME'@users.noreply.github.com'
